@@ -1,0 +1,41 @@
+name: Compilar mod
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Baixar o Forge MDK 1.20.1 e encaixar o mod
+        run: |
+          curl -fL -o mdk.zip https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-mdk.zip
+          mkdir mdk
+          unzip -q mdk.zip -d mdk
+          rm -rf mdk/src/main/java/com/example
+          rm -f mdk/src/main/resources/META-INF/mods.toml
+          cp -r src/. mdk/src/
+          sed -i 's/^mod_id=.*/mod_id=funcionarios/' mdk/gradle.properties
+          sed -i 's/^mod_name=.*/mod_name=Funcionarios/' mdk/gradle.properties
+          sed -i 's/^mod_group_id=.*/mod_group_id=com.funcionarios/' mdk/gradle.properties
+          sed -i 's/^mod_version=.*/mod_version=0.2.0/' mdk/gradle.properties
+
+      - name: Compilar
+        working-directory: mdk
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon
+
+      - name: Guardar o .jar para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: funcionarios-jar
+          path: mdk/build/libs/*.jar

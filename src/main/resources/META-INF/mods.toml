@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All rights reserved"
+
+[[mods]]
+modId="funcionarios"
+version="0.1.0"
+displayName="Funcionários"
+description='''
+Contrate funcionários humanoides que trabalham pra você: pegam madeira, mineram, colhem a fazenda e entregam os itens.
+'''
+
+[[dependencies.funcionarios]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.funcionarios]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
+
+# Opcional: se o TACZ (mod de armas) estiver instalado, os funcionários podem usar as armas dele.
+[[dependencies.funcionarios]]
+modId="tacz"
+mandatory=false
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"

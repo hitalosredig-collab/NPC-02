@@ -15,6 +15,18 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Usar o zip do mod, se existir
+        run: |
+          if ls ./*.zip >/dev/null 2>&1; then
+            ZIP="$(ls -t ./*.zip | head -n1)"
+            mkdir zipmod
+            unzip -q "$ZIP" -d zipmod
+            SRC="$(find zipmod -maxdepth 3 -type d -name src | head -n1)"
+            rm -rf src
+            mkdir -p src
+            cp -r "$SRC"/. src/
+          fi
+
       - name: Baixar o Forge MDK 1.20.1 e encaixar o mod
         run: |
           curl -fL -o mdk.zip https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-mdk.zip
@@ -26,7 +38,7 @@ jobs:
           sed -i 's/^mod_id=.*/mod_id=funcionarios/' mdk/gradle.properties
           sed -i 's/^mod_name=.*/mod_name=Funcionarios/' mdk/gradle.properties
           sed -i 's/^mod_group_id=.*/mod_group_id=com.funcionarios/' mdk/gradle.properties
-          sed -i 's/^mod_version=.*/mod_version=0.2.0/' mdk/gradle.properties
+          sed -i 's/^mod_version=.*/mod_version=0.3.0/' mdk/gradle.properties
 
       - name: Compilar
         working-directory: mdk
